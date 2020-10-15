@@ -29,6 +29,7 @@ client.connect(err => {
   const creativeFeedbacks = client.db("CreativeDB").collection("feedbacks");
   const creativeOrders = client.db("CreativeDB").collection("orders");
   const creativeServices = client.db("CreativeDB").collection("services");
+  const creativeAdmins = client.db("CreativeDB").collection("admins");
 
   app.post('/addFeedbacks', (req, res) => {
     const feedback = req.body;
@@ -98,14 +99,21 @@ client.connect(err => {
     })
   });
 
-
-
   app.get('/services', (req, res) => {
     creativeServices.find({})
     .toArray((err, documents) => {
       res.send(documents);
     })
-  })
+  });
+
+
+  app.post('addAdmin', (req, res) => {
+    const admin = req.body.admin;
+    creativeAdmins.insertOne(admin)
+    .then((result) => {
+      res.send(result.insertedCount > 0);
+    })
+  });
 
 });
 
