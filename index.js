@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.static('serviceIcon'));
 app.use(fileUpload());
 
-const port = 5000;
+const port = 5500;
 
 app.get('/', (req, res) => {
   res.send('Hello, Creative Agency !')
@@ -108,12 +108,26 @@ client.connect(err => {
 
 
   app.post('addAdmin', (req, res) => {
-    const admin = req.body.admin;
+    const admin = req.body;
     creativeAdmins.insertOne(admin)
     .then((result) => {
       res.send(result.insertedCount > 0);
     })
   });
+  app.get('/admins', (req, res) => {
+    creativeAdmins.find({})
+    .toArray((err, documents) => {
+      res.send(documents);
+    })
+  });
+
+  app.post('/isAdmin', (req, res) => {
+    const email = req.body.email;
+    creativeAdmins.find({email: email})
+    .toArray((err, documents) => {
+      res.send(documents);
+    })
+  })
 
 });
 
